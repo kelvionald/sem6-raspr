@@ -33,7 +33,7 @@ namespace Valuator.Pages
             string id = Guid.NewGuid().ToString();
 
             string rankKey = "RANK-" + id;
-            string rank = "" + text.Where(ch => !char.IsLetter(ch)).Count();
+            string rank = GetRank(text).ToString("0.##");
             _storage.Store(rankKey, rank);
 
             string similarityKey = "SIMILARITY-" + id;
@@ -47,6 +47,15 @@ namespace Valuator.Pages
             _storage.Store(textKey, text);
 
             return Redirect($"summary?id={id}");
+        }
+
+        private double GetRank(string text)
+        {
+            if (text == null) {
+                return 0;
+            }
+            int notLetterCharsCount = text.Where(ch => !char.IsLetter(ch)).Count();
+            return notLetterCharsCount / (double) text.Length;
         }
     }
 }
