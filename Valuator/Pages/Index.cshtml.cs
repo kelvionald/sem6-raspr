@@ -37,11 +37,7 @@ namespace Valuator.Pages
             _storage.Store(rankKey, rank);
 
             string similarityKey = "SIMILARITY-" + id;
-            if (_storage.IsExistsByValue(text)) {
-                _storage.Store(similarityKey, "1");
-            } else {
-                _storage.Store(similarityKey, "0");
-            }
+            _storage.Store(similarityKey, GetSimilarity(text).ToString());
 
             string textKey = "TEXT-" + id;
             _storage.Store(textKey, text);
@@ -56,6 +52,14 @@ namespace Valuator.Pages
             }
             int notLetterCharsCount = text.Where(ch => !char.IsLetter(ch)).Count();
             return notLetterCharsCount / (double) text.Length;
+        }
+
+        private double GetSimilarity(string text)
+        {
+            if (_storage.IsExistsByValue(text)) {
+                return 1;
+            }
+            return 0;
         }
     }
 }
