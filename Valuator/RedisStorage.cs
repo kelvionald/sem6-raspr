@@ -7,11 +7,13 @@ namespace Valudator
     {
         private readonly ILogger<RedisStorage> _logger;
         private readonly IDatabase db;
+        private string Host = "localhost";
+        private int Port = 6379;
 
         public RedisStorage(ILogger<RedisStorage> logger) {
             _logger = logger;
             
-            IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect("localhost");
+            IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(Host);
             db = connectionMultiplexer.GetDatabase();
         }
 
@@ -22,7 +24,7 @@ namespace Valudator
 
         public bool IsExistsByValue(string value)
         {
-            var keys = ConnectionMultiplexer.Connect("localhost").GetServer("localhost:6379").Keys(pattern: "*TEXT-*");
+            var keys = ConnectionMultiplexer.Connect(Host).GetServer(Host + ":" + Port).Keys(pattern: "*TEXT-*");
 
             foreach (var key in keys) {
                 string _value = Load(key);
