@@ -6,7 +6,6 @@ namespace Valudator
     public class RedisStorage : IStorage
     {
         private readonly IDatabase db;
-        private string Host = "localhost";
         private string _host = "localhost";
 
         public RedisStorage() {
