@@ -7,10 +7,10 @@ namespace Valudator
     {
         private readonly IDatabase db;
         private string Host = "localhost";
-        private int Port = 6379;
+        private string _host = "localhost";
 
         public RedisStorage() {
-            IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(Host);
+            IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(_host);
             db = connectionMultiplexer.GetDatabase();
         }
 
