@@ -19,22 +19,19 @@ namespace Valudator
             return db.StringGet(key);
         }
 
-        public bool IsExistsByValue(string value)
-        {
-            var keys = ConnectionMultiplexer.Connect(Host).GetServer(Host + ":" + Port).Keys(pattern: "TEXT-*");
-
-            foreach (var key in keys) {
-                string _value = Load(key);
-                if (_value == value) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public void Store(string key, string value)
         {
             db.StringSet(key, value);
+        }
+
+        public bool IsExistsInSet(string setKey, string value)
+        {
+            return db.SetContains(setKey, value);
+        }
+
+        public void StoreToSet(string setKey, string value)
+        {
+            db.SetAdd(setKey, value);
         }
     }
 }

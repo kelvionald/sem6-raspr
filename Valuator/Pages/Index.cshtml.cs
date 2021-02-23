@@ -14,6 +14,7 @@ namespace Valuator.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IStorage _storage;
+        private readonly string _textsSetKey = "TEXTS-SET";
 
         public IndexModel(ILogger<IndexModel> logger, IStorage storage)
         {
@@ -37,10 +38,12 @@ namespace Valuator.Pages
             _storage.Store(rankKey, rank);
 
             string similarityKey = "SIMILARITY-" + id;
-            _storage.Store(similarityKey, GetSimilarity(text).ToString());
+            string similarity = GetSimilarity(text).ToString();
+            _storage.Store(similarityKey, similarity);
 
             string textKey = "TEXT-" + id;
             _storage.Store(textKey, text);
+            _storage.StoreToSet(_textsSetKey, text);
 
             return Redirect($"summary?id={id}");
         }
@@ -56,10 +59,7 @@ namespace Valuator.Pages
 
         private double GetSimilarity(string text)
         {
-            if (_storage.IsExistsByValue(text)) {
-                return 1;
-            }
-            return 0;
+            return _storage.IsExistsInSet(_textsSetKey, text) ? 1 : 0;
         }
     }
 }

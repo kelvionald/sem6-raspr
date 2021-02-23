@@ -4,6 +4,7 @@ namespace Valudator
     {
         void Store(string key, string value);
         string Load(string key);
-        bool IsExistsByValue(string value);
+        void StoreToSet(string setKey, string value);
+        bool IsExistsInSet(string setKey, string value);
     }
 }
