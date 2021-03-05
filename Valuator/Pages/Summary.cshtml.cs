@@ -22,13 +22,16 @@ namespace Valuator.Pages
 
         public double Rank { get; set; }
         public double Similarity { get; set; }
+        public bool IsRankEmpty { get; set; }
 
         public void OnGet(string id)
         {
             _logger.LogDebug(id);
 
             string rankKey = "RANK-" + id;
-            Rank = Convert.ToDouble(_storage.Load(rankKey));
+            string rank = _storage.Load(rankKey);
+            IsRankEmpty = rank == null;
+            Rank = Convert.ToDouble(rank);
 
             string similarityKey = "SIMILARITY-" + id;
             Similarity = Convert.ToDouble(_storage.Load(similarityKey));

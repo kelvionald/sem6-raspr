@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
 using Valudator;
 
 namespace Valuator.Pages
@@ -14,12 +10,14 @@ namespace Valuator.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IStorage _storage;
+        private readonly IMessageBroker _messageBroker;
         private readonly string _textsSetKey = "TEXTS-SET";
 
-        public IndexModel(ILogger<IndexModel> logger, IStorage storage)
+        public IndexModel(ILogger<IndexModel> logger, IStorage storage, IMessageBroker messageBroker)
         {
             _logger = logger;
             _storage = storage;
+            _messageBroker = messageBroker;
         }
 
         public void OnGet()
@@ -33,9 +31,7 @@ namespace Valuator.Pages
 
             string id = Guid.NewGuid().ToString();
 
-            string rankKey = "RANK-" + id;
-            string rank = GetRank(text).ToString("0.##");
-            _storage.Store(rankKey, rank);
+            CreateRankCalculatorTask(id);
 
             string similarityKey = "SIMILARITY-" + id;
             string similarity = GetSimilarity(text).ToString();
@@ -47,14 +43,10 @@ namespace Valuator.Pages
 
             return Redirect($"summary?id={id}");
         }
-
-        private double GetRank(string text)
+        
+        private void CreateRankCalculatorTask(string id)
         {
-            if (text == null) {
-                return 0;
-            }
-            int notLetterCharsCount = text.Where(ch => !char.IsLetter(ch)).Count();
-            return notLetterCharsCount / (double) text.Length;
+            _messageBroker.Send("valuator.processing.rank", id);
         }
 
         private double GetSimilarity(string text)
