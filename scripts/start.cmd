@@ -8,3 +8,6 @@ start /d ..\nats\ nats-server.exe
 
 start /d ..\RankCalculator\ dotnet run --no-build
 start /d ..\RankCalculator\ dotnet run --no-build
+
+start /d ..\EventsLogger\EventsLogger\ dotnet run --no-build
+start /d ..\EventsLogger\EventsLogger\ dotnet run --no-build

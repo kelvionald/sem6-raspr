@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Valudator;
+using Library;
+using System.Text.Json;
 
 namespace Valuator.Pages
 {
@@ -35,6 +36,7 @@ namespace Valuator.Pages
 
             string similarityKey = "SIMILARITY-" + id;
             string similarity = GetSimilarity(text).ToString();
+            PublishEventSimilarityCalculated(id, similarity);
             _storage.Store(similarityKey, similarity);
 
             string textKey = "TEXT-" + id;
@@ -47,6 +49,12 @@ namespace Valuator.Pages
         private void CreateRankCalculatorTask(string id)
         {
             _messageBroker.Send("valuator.processing.rank", id);
+        }
+        
+        private void PublishEventSimilarityCalculated(string id, string similarity)
+        {
+            EventContainer eventData = new EventContainer { Name = "SimilarityCalculated", Id = id, Value = similarity };
+            _messageBroker.Publish("Events", JsonSerializer.Serialize(eventData));
         }
 
         private double GetSimilarity(string text)

@@ -1,7 +1,6 @@
-using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
-namespace Valudator
+namespace Library
 {
     public class RedisStorage : IStorage
     {

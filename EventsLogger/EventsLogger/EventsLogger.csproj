@@ -6,12 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="StackExchange.Redis" version="2.2.4" />
-    <PackageReference Include="NATS.Client" Version="0.11.0" />
+    <PackageReference Include="NATS.Client" Version="0.12.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Library\Library\Library.csproj" />
+    <ProjectReference Include="..\..\Library\Library\Library.csproj" />
   </ItemGroup>
 
 </Project>
