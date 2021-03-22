@@ -1,13 +1,13 @@
   
-start /d ..\Valuator\ dotnet run --no-build --urls "http://localhost:5001"
-start /d ..\Valuator\ dotnet run --no-build --urls "http://localhost:5002"
+start "Valuator 1" /d ..\Valuator\ dotnet run --no-build --urls "http://localhost:5001"
+start "Valuator 2" /d ..\Valuator\ dotnet run --no-build --urls "http://localhost:5002"
 
 start /d ..\nginx\ nginx.exe
 
-start /d ..\nats\ nats-server.exe
+start "Nats" /d ..\nats\ nats-server.exe
 
-start /d ..\RankCalculator\ dotnet run --no-build
-start /d ..\RankCalculator\ dotnet run --no-build
+start "Rank calculator 1" /d ..\RankCalculator\ dotnet run --no-build
+start "Rank calculator 2" /d ..\RankCalculator\ dotnet run --no-build
 
-start /d ..\EventsLogger\EventsLogger\ dotnet run --no-build
-start /d ..\EventsLogger\EventsLogger\ dotnet run --no-build
+start "Events logger 1" /d ..\EventsLogger\EventsLogger\ dotnet run --no-build
+start "Events logger 2" /d ..\EventsLogger\EventsLogger\ dotnet run --no-build
