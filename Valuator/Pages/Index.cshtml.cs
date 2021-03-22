@@ -55,7 +55,7 @@ namespace Valuator.Pages
         private void PublishEventSimilarityCalculated(string id, string similarity)
         {
             EventContainer eventData = new EventContainer { Name = "SimilarityCalculated", Id = id, Value = similarity };
-            _messageBroker.Publish("Events", JsonSerializer.Serialize(eventData));
+            _messageBroker.Send("Events", JsonSerializer.Serialize(eventData));
         }
 
         private double GetSimilarity(string text)

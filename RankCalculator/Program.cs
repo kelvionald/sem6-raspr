@@ -31,7 +31,7 @@ namespace RankCalculator
         private static void PublishEventRankCalculated(string id, string rank)
         {
             EventContainer eventData = new EventContainer { Name = "RankCalculated", Id = id, Value = rank };
-            _messageBroker.Publish("Events", JsonSerializer.Serialize(eventData));
+            _messageBroker.Send("Events", JsonSerializer.Serialize(eventData));
         }
 
         static void Main(string[] args)
