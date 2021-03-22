@@ -32,6 +32,9 @@ namespace Valuator.Pages
 
             string id = Guid.NewGuid().ToString();
 
+            string textKey = "TEXT-" + id;
+            _storage.Store(textKey, text);
+
             CreateRankCalculatorTask(id);
 
             string similarityKey = "SIMILARITY-" + id;
@@ -39,8 +42,6 @@ namespace Valuator.Pages
             PublishEventSimilarityCalculated(id, similarity);
             _storage.Store(similarityKey, similarity);
 
-            string textKey = "TEXT-" + id;
-            _storage.Store(textKey, text);
             _storage.StoreToSet(_textsSetKey, text);
 
             return Redirect($"summary?id={id}");
