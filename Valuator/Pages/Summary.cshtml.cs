@@ -24,13 +24,11 @@ namespace Valuator.Pages
         {
             _logger.LogDebug(id);
 
-            string rankKey = "RANK-" + id;
-            string rank = _storage.Load(rankKey);
+            string rank = _storage.Load(Const.RankKey + id);
             IsRankEmpty = rank == null;
             Rank = Convert.ToDouble(rank);
 
-            string similarityKey = "SIMILARITY-" + id;
-            Similarity = Convert.ToDouble(_storage.Load(similarityKey));
+            Similarity = Convert.ToDouble(_storage.Load(Const.SimilarityKey + id));
         }
     }
 }

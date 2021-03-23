@@ -24,8 +24,7 @@ namespace RankCalculator
 
         private static void StoreRank(string id, string rank)
         {
-            string rankKey = "RANK-" + id;
-            _db.StringSet(rankKey, rank);
+            _db.StringSet(Const.RankKey + id, rank);
         }
 
         private static void PublishEventRankCalculated(string id, string rank)
@@ -51,8 +50,7 @@ namespace RankCalculator
                 string id = Encoding.UTF8.GetString(args.Message.Data);
                 Console.WriteLine("Preparing id " + id);
 
-                string textKey = "TEXT-" + id;
-                string text = _db.StringGet(textKey);
+                string text = _db.StringGet(Const.TextKey + id);
                 string rank = CalcRank(text).ToString("0.##");
 
                 StoreRank(id, rank);
