@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="StackExchange.Redis" version="2.2.4" />
     <PackageReference Include="NATS.Client" Version="0.11.0" />
+    <PackageReference Include="StackExchange.Redis.Extensions.Core" Version="6.4.5" />
   </ItemGroup>
 
 </Project>

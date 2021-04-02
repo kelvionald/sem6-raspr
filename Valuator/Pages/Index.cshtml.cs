@@ -12,12 +12,14 @@ namespace Valuator.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly IStorage _storage;
         private readonly IMessageBroker _messageBroker;
+        public string[] Countries { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, IStorage storage, IMessageBroker messageBroker)
         {
             _logger = logger;
             _storage = storage;
             _messageBroker = messageBroker;
+            Countries = Const.Countries;
         }
 
         public void OnGet()
@@ -25,25 +27,48 @@ namespace Valuator.Pages
 
         }
 
-        public IActionResult OnPost(string text)
+        public IActionResult OnPost(string text, string country)
         {
             _logger.LogDebug(text);
 
             string id = Guid.NewGuid().ToString();
 
-            _storage.Store(Const.TextKey + id, text);
+            string segmentId = GetSegmentIdByCountry(country);
+            _logger.LogDebug($"LOOKUP: {id}, {segmentId}");
+            _storage.Store(Const.SegmentKey + id, segmentId);
+
+            _storage.Store(segmentId, Const.TextKey + id, text);
 
             CreateRankCalculatorTask(id);
 
             string similarity = GetSimilarity(text).ToString();
             PublishEventSimilarityCalculated(id, similarity);
-            _storage.Store(Const.SimilarityKey + id, similarity);
+            _storage.Store(segmentId, Const.SimilarityKey + id, similarity);
 
-            _storage.StoreToSet(Const.TextsSetKey, text);
+            _storage.StoreToSet(segmentId, Const.TextsSetKey, text);
 
             return Redirect($"summary?id={id}");
         }
-        
+
+        private string GetSegmentIdByCountry(string country)
+        {
+            switch (country)
+            {
+                case "Russia":
+                    return Const.SEGMENT_RUS;
+                case "France":
+                case "Germany":
+                    return Const.SEGMENT_EU;
+                case "USA":
+                case "India":
+                    return Const.SEGMENT_OTHER;
+            }
+
+            _logger.LogError($"Undefined country {country}");
+            
+            return "";
+        }
+
         private void CreateRankCalculatorTask(string id)
         {
             _messageBroker.Send("valuator.processing.rank", id);

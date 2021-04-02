@@ -1,4 +1,5 @@
-  
+start redis_start.cmd
+
 start "Valuator 1" /d ..\Valuator\ dotnet run --no-build --urls "http://localhost:5001"
 start "Valuator 2" /d ..\Valuator\ dotnet run --no-build --urls "http://localhost:5002"
 

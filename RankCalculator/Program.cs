@@ -12,6 +12,7 @@ namespace RankCalculator
     {
         private static IDatabase _db;
         private static IMessageBroker _messageBroker;
+        private static RedisStorage _storage;
 
         private static double CalcRank(string text) {
             double rank = 0;
@@ -22,9 +23,9 @@ namespace RankCalculator
             return rank;
         }
 
-        private static void StoreRank(string id, string rank)
+        private static void StoreRank(string segmentId, string id, string rank)
         {
-            _db.StringSet(Const.RankKey + id, rank);
+            _storage.Store(segmentId, Const.RankKey + id, rank);
         }
 
         private static void PublishEventRankCalculated(string id, string rank)
@@ -38,6 +39,7 @@ namespace RankCalculator
             Console.WriteLine("RankCalculator started");
 
             _messageBroker = new NatsMessageBroker();
+            _storage = new RedisStorage();
 
             ConnectionFactory cf = new ConnectionFactory();
             using IConnection c = cf.CreateConnection();
@@ -50,10 +52,12 @@ namespace RankCalculator
                 string id = Encoding.UTF8.GetString(args.Message.Data);
                 Console.WriteLine("Preparing id " + id);
 
-                string text = _db.StringGet(Const.TextKey + id);
+                string segmentId = _storage.GetSegmentId(id);
+
+                string text = _storage.Load(segmentId, Const.TextKey + id);
                 string rank = CalcRank(text).ToString("0.##");
 
-                StoreRank(id, rank);
+                StoreRank(segmentId, id, rank);
                 PublishEventRankCalculated(id, rank);
             });
 
