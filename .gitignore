@@ -1,5 +1,0 @@
-nginx/*
-!nginx/conf/nginx.conf
-nats/nats-server.exe
-nats_example
-EventsLogger/.vs
