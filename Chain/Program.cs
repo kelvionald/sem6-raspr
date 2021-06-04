@@ -20,9 +20,9 @@ namespace Chain
             var writerPort = Convert.ToInt32(args[2]);
             bool isInitiator = args.Length == 4 && args[3] == "true";
 
-            x = Convert.ToInt32(Console.ReadLine());
-
             InitSockets(listenPort, writerAddress, writerPort);
+
+            x = Convert.ToInt32(Console.ReadLine());
 
             if (isInitiator)
             {
